@@ -1,126 +1,167 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Yuxiang Cai</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yuxiang Cai</title>
+  <!-- React CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Babel CDN -->
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary: #2d3436;
-      --secondary: #666;
-      --accent: #0984e3;
-    }
-    /* 重置 html 与 body 高度，开启 Flex 布局 */
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
     }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
-      line-height: 1.7;
-      color: var(--primary);
-      display: flex;
-      flex-direction: column;
-    }
-    /* 内容区域自动填充剩余空间 */
-    .container {
-      flex: 1;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 4rem 1.5rem;
-    }
-    h1 {
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 2rem;
-    }
-    .intro {
-      font-size: 1.1rem;
-      margin-bottom: 3rem;
-      line-height: 1.8;
-    }
-    .services {
-      margin-bottom: 3rem;
-    }
-    .services h2 {
-      font-size: 1.4rem;
-      font-weight: 500;
-      margin-bottom: 1.5rem;
-    }
-    .service-item {
-      margin-bottom: 2rem;
-    }
-    .service-item h3 {
-      font-size: 1.15rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-    .service-item p {
-      font-size: 1.05rem;
-      margin: 0;
-      color: var(--secondary);
-    }
-    .art-project {
-      margin-top: 4rem;
-      padding-top: 2rem;
-      border-top: 1px solid #eee;
-    }
-    .art-project p {
-      font-size: 1.05rem;
-      margin-bottom: 2.2rem;
-    }
-    /* 页脚不再使用 fixed，而是在文档流中 */
-    .copyright {
-      text-align: center;
-      color: var(--secondary);
-      font-size: 0.9rem;
-      opacity: 0.8;
-      padding: 1rem;
-    }
-    @media (max-width: 640px) {
-      .container { 
-        padding: 2rem 1rem;
+    /* 定义文字向上淡入的动画 */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
       }
-      h1 { font-size: 1.6rem; }
-      .intro { font-size: 1rem; }
-      .service-item h3 { font-size: 1.1rem; }
-      .service-item p { font-size: 1rem; }
-      .copyright { font-size: 0.85rem; }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 1s ease-out forwards;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>About me</h1>
-    
-    <div class="intro">
-      Hi， 我是 Yuxiang Cai， 目前在奶茶鼠保护协会及星际难民署任职，同时担任电影催眠研究员。致力于跨星际文化交流与多元领域创新。
-    </div>
-
-    <div class="services">
-      <h2>主营业务</h2>
+<body class="relative">
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    // 自定义组件：当滚动到该部分时触发淡入向上动画
+    function FadeInSection(props) {
+      const domRef = React.useRef();
+      const [isVisible, setVisible] = React.useState(false);
       
-      <div class="service-item">
-        <h3>1. 奶茶鼠饲养</h3>
-        <p>基于外星啮齿类动物行为学研究，实施奶茶仓鼠全生命周期照护方案，促进其生理机能优化与情感需求满足，为跨物种生态构建提供坚实支撑。</p>
-      </div>
-
-      <div class="service-item">
-        <h3>2. 星际移民身份过渡服务</h3>
-        <p>为地外智慧生命体提供碳基社会认知培训及多语种技能重塑服务，助力星际移民顺利实现地球化生存，实现星际文明共融愿景。</p>
-      </div>
-
-      <div class="service-item">
-        <h3>3. 电影催眠技术咨询</h3>
-        <p>致力于助力电影制作人探索影视创作与心理调控的深层价值，打造兼具艺术表达与心理疗愈功能的全新电影范式，确保观众在片头曲结束前进入深度睡眠，带来前所未有的放松体验。</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="copyright">
-    ©2025 Yuxiang Cai. All rights reserved.<br>
-    阅读本页面即默认接受奶茶鼠的监视，祝你好运。
-  </div>
+      React.useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setVisible(true);
+              observer.unobserve(entry.target); // 一旦可见，就停止观察
+            }
+          });
+        });
+        if (domRef.current) {
+          observer.observe(domRef.current);
+        }
+        return () => observer.disconnect();
+      }, []);
+      
+      return (
+        <div
+          ref={domRef}
+          className={`transition-opacity duration-1000 ${isVisible ? 'opacity-100 animate-fadeInUp' : 'opacity-0'}`}
+        >
+          {props.children}
+        </div>
+      );
+    }
+    
+    function Website() {
+      return (
+        <div className="relative bg-white overflow-hidden">
+          {/* 背景光晕：全屏覆盖 */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div
+              className="absolute inset-0"
+              style={{
+                /* 渐变中心调整到右侧（80% 50%），颜色更浓郁 */
+                background: 'radial-gradient(circle at 80% 40%, rgba(255,192,203,0.9) 0%, rgba(255,182,193,0.7) 20%, rgba(255,192,203,0.5) 40%, transparent 60%)'
+              }}
+            ></div>
+          </div>
+          
+          {/* 磨砂玻璃效果：全屏覆盖 */}
+          <div className="absolute inset-0 pointer-events-none backdrop-blur-xl bg-white/60"></div>
+          
+          {/* 内容层 */}
+          <div className="relative z-10">
+            {/* 全屏区：导航和主要内容 */}
+            <div className="min-h-screen pt-24 lg:pt-32">
+              {/* 顶部导航 */}
+              <nav className="max-w-3xl mx-auto px-6 py-6">
+                <div className="flex items-center">
+                  <span className="text-xl font-bold text-slate-900">Yuxiang Cai</span>
+                </div>
+              </nav>
+              
+              {/* 主要内容区域 */}
+              <main className="max-w-3xl mx-auto px-6 py-24 animate-fadeInUp">
+                <div className="text-left">
+                  <h1 className="text-5xl font-bold mb-8 text-slate-900">
+                    探索未来<br />跨越星际的创新🚀
+                  </h1>
+                  <p className="text-xl text-slate-700 mb-12">
+                    专注于奶茶鼠护理、星际难民服务和电影催眠研究。<br />
+                    搭建物种与星系间的桥梁。
+                  </p>
+                  <button 
+                    className="px-6 py-3 rounded-full border border-slate-900/20 text-slate-900 hover:bg-white/20 transition-colors"
+                    onClick={() => alert("不许联系我")}
+                  >
+                    联系我
+                  </button>
+                </div>
+              </main>
+            </div>
+            
+            {/* 后续内容：滚动时出现动画效果 */}
+            <FadeInSection>
+              <main className="max-w-3xl mx-auto px-6 py-24">
+                <div className="space-y-12 text-left">
+                  <div>
+                    <h3 className="text-xl font-bold mb-4 text-slate-900">奶茶鼠护理</h3>
+                    <p className="text-slate-700">
+                      基于外星啮齿类动物行为学研究，实施奶茶仓鼠全生命周期照护方案，
+                      促进其生理机能优化与情感需求满足，为跨物种生态构建提供坚实支撑。
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-xl font-bold mb-4 text-slate-900">星际移民身份过渡服务</h3>
+                    <p className="text-slate-700">
+                      为地外智慧生命体提供碳基社会认知培训及多语种技能重塑服务，
+                      助力星际移民顺利实现地球化生存，实现星际文明共融愿景。
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-xl font-bold mb-4 text-slate-900">电影催眠技术咨询</h3>
+                    <p className="text-slate-700">
+                      致力于助力电影制作人探索影视创作与心理调控的深层价值，
+                      打造兼具艺术表达与心理疗愈功能的全新电影范式，
+                      确保观众在片头曲结束前进入深度睡眠，带来前所未有的放松体验。
+                    </p>
+                  </div>
+                </div>
+              </main>
+            </FadeInSection>
+            
+            {/* 页脚 */}
+            <footer className="text-center p-6 text-sm text-slate-700">
+              ©2025 Yuxiang Cai. All rights reserved.
+              <br />
+              阅读本页面即默认接受奶茶鼠的监视，祝你好运。
+            </footer>
+          </div>
+        </div>
+      );
+    }
+    
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<Website />);
+  </script>
 </body>
 </html>
