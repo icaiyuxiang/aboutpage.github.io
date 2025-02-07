@@ -73,7 +73,7 @@
       // 当前选择的语言状态，默认简体中文（zh）
       const [language, setLanguage] = React.useState("zh");
       
-      // 定义各语言对应的显示名称
+      // 定义各语言对应的显示名称，并新增“鼠语”
       const languageNames = { 
         zh: "中文", 
         "zh-tw": "繁體中文",
@@ -90,13 +90,14 @@
         ru: "Русский",
         th: "ไทย",
         ar: "العربية",
-        cy: "Cymraeg"
+        cy: "Cymraeg",
+        shu: "鼠语"
       };
       
-      // 定义下拉菜单中语言显示的顺序
+      // 定义下拉菜单中语言显示的顺序，并在最后添加“鼠语”
       const languageOrder = [
         "zh", "zh-tw", "qingdao", "shanghai", "nanchang", "yue",
-        "en", "fr", "de", "es", "ja", "ko", "ru", "th", "ar", "cy"
+        "en", "fr", "de", "es", "ja", "ko", "ru", "th", "ar", "cy", "shu"
       ];
       
       // 定义各语言的文本内容
@@ -327,25 +328,25 @@
         },
         ja: {
           navTitle: "Yuxiang Cai",
-          headerTitle: "Exploring the Future\nAcross the Cosmos of Innovation 🪐",
-          headerDescription: "Focused on Boba Rat Care, Interstellar Refugee Services, and Film Hypnosis Research.\nBuilding bridges between species and galaxies.",
+          headerTitle: "未来を探る\n星々を越える革新🪐",
+          headerDescription: "ボバラットケア、星間難民サービス、映画催眠研究に専念。\n種と銀河間をつなぐ架け橋を築く。",
           contact: "お問い合わせ",
           contactAlert: "連絡しないでください",
           sections: [
             {
-              title: "Boba Rat ケア",
-              content: "地球外げっ歯類の行動学研究に基づき、Boba Rat の全ライフサイクルケアプランを実施。生理機能の最適化と情緒的ニーズの充足を図り、種間生態系構築の堅実な支援を提供します。"
+              title: "ボバラットケア",
+              content: "地球外げっ歯類の行動学研究に基づき、ボバラットの全ライフサイクルにわたるケアプランを実施。生理機能の最適化と情緒的ニーズの充足を図り、種間生態系構築に堅実な支援を提供します。"
             },
             {
               title: "星間移民移行サービス",
-              content: "地球外知的生命体に、炭素ベースの社会認識研修および多言語スキル再構築サービスを提供し、地球適応生活の円滑な実現と星間文明の融合ビジョンを促進します。"
+              content: "地球外知的生命体に対して、炭素ベースの社会認識研修および多言語スキル再構築サービスを提供し、地球適応生活の円滑な実現と星間文明の融合を促進します。"
             },
             {
               title: "映画催眠技術コンサルティング",
-              content: "映画製作者が映像創作と心理調整の深い価値を探求するのを支援し、芸術表現と心理療法を融合した新しい映画パラダイムを構築。オープニングクレジット終了前に観客が深い眠りに入ることを保証し、前例のないリラクゼーションを提供します。"
+              content: "映画製作者が映像創作と心理調整の深い価値を探求するのを支援し、芸術表現と心理療法を融合した新たな映画パラダイムを構築。オープニングクレジット終了前に観客が深い眠りに入ることを保証し、前例のないリラクゼーションを提供します。"
             }
           ],
-          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nこのページを閲覧することで、ボバラットの監視に同意したものとみなされます。幸運を祈ります！"
         },
         ko: {
           navTitle: "Yuxiang Cai",
@@ -413,28 +414,6 @@
           ],
           footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
         },
-        es: {
-          navTitle: "Yuxiang Cai",
-          headerTitle: "Explorando el Futuro\nInnovación a través del Cosmos 🪐",
-          headerDescription: "Enfocado en el Cuidado de Boba Rat, Servicios para Refugiados Interestelares y la Investigación en Hipnosis Cinematográfica.\nConstruyendo puentes entre especies y galaxias.",
-          contact: "Contáctame",
-          contactAlert: "No me contactes",
-          sections: [
-            {
-              title: "Cuidado de Boba Rat",
-              content: "Basado en la investigación del comportamiento de roedores extraterrestres, implementamos un plan integral de cuidado para Boba Rat a lo largo de su ciclo de vida, optimizando sus funciones fisiológicas y satisfaciendo sus necesidades emocionales, proporcionando un sólido apoyo para la construcción de ecosistemas inter-especies."
-            },
-            {
-              title: "Servicios de Transición para la Inmigración Interestelar",
-              content: "Ofrecemos a seres inteligentes extraterrestres capacitación en conciencia social basada en el carbono y una reestructuración de habilidades multilingües, facilitando su adaptación exitosa a la vida en la Tierra y fomentando una visión de integración cultural interestelar."
-            },
-            {
-              title: "Consultoría en Hipnosis Cinematográfica",
-              content: "Dedicados a ayudar a cineastas a explorar el profundo valor de la creación cinematográfica y la regulación psicológica, elaboramos un nuevo paradigma cinematográfico que combina la expresión artística con la sanación psicológica, asegurando que el público entre en un sueño profundo antes de que terminen los créditos iniciales, ofreciendo un nivel de relajación sin precedentes."
-            }
-          ],
-          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
-        },
         ar: {
           navTitle: "Yuxiang Cai",
           headerTitle: "استكشاف المستقبل\nعبر كون الابتكار 🪐",
@@ -478,6 +457,29 @@
             }
           ],
           footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        // 新增的鼠语：所有文字内容均为“我想喝奶茶”
+        shu: {
+          navTitle: "Boba Rat",
+          headerTitle: "我想喝奶茶\n我想喝奶茶,我想喝奶茶🧋",
+          headerDescription: "我想喝奶茶，我想喝奶茶我想喝奶茶我想喝奶茶\n我想喝奶茶，我想喝奶茶，我想喝奶茶！",
+          contact: "我想喝奶茶",
+          contactAlert: "我真的想喝奶茶",
+          sections: [
+            {
+              title: "我想喝奶茶",
+              content: "我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶"
+            },
+            {
+              title: "我想喝奶茶",
+              content: "我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶"
+            },
+            {
+              title: "我想喝奶茶",
+              content: "我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶我想喝奶茶"
+            }
+          ],
+          footer: "©2025 Boba Rat. All rights reserved.\n阅读本页面即默认给奶茶鼠买一杯奶茶，祝你好运。"
         }
       };
       
