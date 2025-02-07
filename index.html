@@ -19,7 +19,7 @@
       width: 100%;
       font-family: Arial, sans-serif;
     }
-    /* 定义文字向上淡入的动画 */
+    /* 文字向上淡入动画 */
     @keyframes fadeInUp {
       0% {
         opacity: 0;
@@ -39,7 +39,7 @@
   <div id="root"></div>
   
   <script type="text/babel">
-    // 自定义组件：当滚动到该部分时触发淡入向上动画
+    // 当滚动到可视区域时触发淡入动画的组件
     function FadeInSection(props) {
       const domRef = React.useRef();
       const [isVisible, setVisible] = React.useState(false);
@@ -49,7 +49,7 @@
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               setVisible(true);
-              observer.unobserve(entry.target); // 一旦可见，就停止观察
+              observer.unobserve(entry.target);
             }
           });
         });
@@ -70,90 +70,500 @@
     }
     
     function Website() {
+      // 当前选择的语言状态，默认简体中文（zh）
+      const [language, setLanguage] = React.useState("zh");
+      
+      // 定义各语言对应的显示名称
+      const languageNames = { 
+        zh: "中文", 
+        "zh-tw": "繁體中文",
+        qingdao: "青岛话",
+        shanghai: "上海话",
+        nanchang: "南昌话",
+        yue: "粵語",
+        en: "English", 
+        fr: "Français", 
+        de: "Deutsch", 
+        es: "Español",
+        ja: "日本語", 
+        ko: "한국어", 
+        ru: "Русский",
+        th: "ไทย",
+        ar: "العربية",
+        cy: "Cymraeg"
+      };
+      
+      // 定义下拉菜单中语言显示的顺序
+      const languageOrder = [
+        "zh", "zh-tw", "qingdao", "shanghai", "nanchang", "yue",
+        "en", "fr", "de", "es", "ja", "ko", "ru", "th", "ar", "cy"
+      ];
+      
+      // 定义各语言的文本内容
+      // 说明：
+      // – 对于 zh、zh-tw、yue、nanchang、qingdao 的内容保留“奶茶鼠”
+      // – 非中文（en、fr、de、es、ja、ko、ru、th、ar、cy）均显示 “Boba Rat”
+      // – 上海话（shanghai）版本中用近似发音“奈查鼠”替代
+      const translations = {
+        zh: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "探索未来\n跨越星际的创新🪐",
+          headerDescription: "专注于奶茶鼠护理、星际难民服务和电影催眠研究。\n搭建物种与星系间的桥梁。",
+          contact: "联系我",
+          contactAlert: "不许联系我",
+          sections: [
+            {
+              title: "奶茶鼠护理",
+              content: "基于外星啮齿类动物行为学研究，实施奶茶鼠全生命周期照护方案，促进其生理机能优化与情感需求满足，为跨物种生态构建提供坚实支撑。"
+            },
+            {
+              title: "星际移民身份过渡服务",
+              content: "为地外智慧生命体提供碳基社会认知培训及多语种技能重塑服务，助力星际移民顺利实现地球化生存，实现星际文明共融愿景。"
+            },
+            {
+              title: "电影催眠技术咨询",
+              content: "致力于助力电影制作人探索影视创作与心理调控的深层价值，打造兼具艺术表达与心理疗愈功能的全新电影范式，确保观众在片头曲结束前进入深度睡眠，带来前所未有的放松体验。"
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\n阅读本页面即默认接受奶茶鼠的监视，祝你好运。"
+        },
+        "zh-tw": {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "探索未來\n跨越星際的創新🪐",
+          headerDescription: "專注於奶茶鼠護理、星際難民服務和電影催眠研究。\n搭建物種與星系間的橋樑。",
+          contact: "聯絡我",
+          contactAlert: "不許聯絡我",
+          sections: [
+            {
+              title: "奶茶鼠護理",
+              content: "基於外星囓齒類動物行為學研究，實施奶茶鼠全生命週期照護方案，促進其生理機能優化與情感需求滿足，為跨物種生態構建提供堅實支撐。"
+            },
+            {
+              title: "星際移民身份過渡服務",
+              content: "為地外智慧生命體提供碳基社會認知培訓及多語種技能重塑服務，助力星際移民順利實現地球化生存，實現星際文明共融願景。"
+            },
+            {
+              title: "電影催眠技術諮詢",
+              content: "致力於協助電影製作人探索影視創作與心理調控的深層價值，打造兼具藝術表達與心理療癒功能的全新電影範式，確保觀眾在片頭曲結束前進入深度睡眠，帶來前所未有的放鬆體驗。"
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\n閱讀本頁面即視為接受奶茶鼠的監視，祝你好運。"
+        },
+        yue: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "探索未來\n跨越星際嘅創新🪐",
+          headerDescription: "專注於奶茶鼠護理、星際難民服務同電影催眠研究。\n搭建物種同銀河之間嘅橋樑。",
+          contact: "聯絡我",
+          contactAlert: "唔好聯絡我",
+          sections: [
+            {
+              title: "奶茶鼠護理",
+              content: "根據外星囓齒類動物行為研究，實施奶茶鼠全生命周期護理方案，促進其生理機能優化同情感需求滿足，為跨物種生態構建提供堅實支撐。"
+            },
+            {
+              title: "星際移民身份過渡服務",
+              content: "為外星智慧生命提供碳基社會認知培訓及多語言技能重塑服務，幫助星際移民順利實現地球化生存，實現星際文明共融嘅願景。"
+            },
+            {
+              title: "電影催眠技術諮詢",
+              content: "致力於幫助電影製作人探索影視創作同心理調控嘅深層價值，打造兼具藝術表達同心理療癒功能嘅全新電影範式，確保觀眾喺片頭曲結束前進入深度睡眠，帶嚟前所未有嘅放鬆體驗。"
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\n閱讀本頁即視為接受奶茶鼠嘅監視，祝你好運。"
+        },
+        shanghai: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "摸到未来\n穿越星空的搞搞新意思🪐",
+          headerDescription: "专门搞奶茶鼠服侍、星际难民安顿搭仔电影催眠研究，弄点额外好玩料。\n帮外星头搭地球浪厢架桥铺路，侬晓得伐？",
+          contact: "搭吾联系",
+          contactAlert: "覅来掏糨糊",
+          sections: [
+            {
+              title: "奶茶鼠服侍经",
+              content: "根据外星啮齿动物研究，弄出奶茶鼠一条龙服侍方案，帮伊拉调理身体满足情感，跨物种生态建设真格扎实，简直老早就想弄伐啦！"
+            },
+            {
+              title: "星际移民落户指南",
+              content: "帮外星朋友搞地球生活培训，教伊拉上海闲话搭生活门道，让外星人在地球浪厢里活得潇洒，搞出个真格大团结！"
+            },
+            {
+              title: "电影催眠老卵咨询",
+              content: "帮导演朋友探索电影搭催眠术的化学反应，搞出既艺术又治愈的新式电影，保证观众主题曲没唱完就觉着爽爽松快，真是拎得清！"
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\n看牢本页面就代表侬同意给奶茶鼠监视，自家当心点"
+        },
+        nanchang: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "摸到未来\n穿越星空的恰噶搞法🪐",
+          headerDescription: "专门做奶茶鼠伺候、星际难民安置搭电影催眠研究，额外加点爆款料。\n帮外星佬搭地球银牵线搭桥，老火得很！",
+          contact: "跟偶联系",
+          contactAlert: "莫来打野话",
+          sections: [
+            {
+              title: "奶茶鼠伺候宝典",
+              content: "根据外星啮齿动物研究，整出奶茶鼠全套伺候方案，帮渠俚调理身子满足情感，让跨物种生态建设变得忒实在，简直拢牢啦！"
+            },
+            {
+              title: "星际移民落户门道",
+              content: "帮外星老表搞地球生活培训，教渠俚南昌话搭生活技巧，让外星银在地球上恰得开，整出个真格大团结,真是稳得很！"
+            },
+            {
+              title: "电影催眠绝杀咨询",
+              content: "帮导演老表研究电影搭催眠术的化学反应，搞出既艺术又治愈的新式电影，保证观众片头曲冇唱完就睡得呼噜噜，忒有料！"
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\n扫过本页面就当你同意奶茶鼠24小时关心，莫要太乐呵。"
+        },
+        qingdao: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "捣鼓未来\n穿越星海的潮吧操作🪐",
+          headerDescription: "专门鼓捣奶茶耗子伺候、星际难民安顿搭电影催眠研究，顺便加点新鲜潮流调调。\n给外星银搭地球银架桥铺路，真悬了！",
+          contact: "恁联系我",
+          contactAlert: "白来叨叨",
+          sections: [
+            {
+              title: "奶茶鼠伺候大全",
+              content: "根据外星耗子研究，弄出奶茶鼠全程伺候方案，给它们调理身子满足感情，让跨物种生态建设真正扎实！"
+            },
+            {
+              title: "星际移民落户攻略",
+              content: "帮外星老巴子搞地球生活培训，教他们青岛话搭生活窍门，让外星银在青岛地界儿上混得欢，真正实现星际大团结！"
+            },
+            {
+              title: "电影催眠神技咨询",
+              content: "帮导演伙计研究电影搭催眠的化学反应，搞出既艺术又治愈的新式电影，保证观众片头曲没放完就睡得呼噜噜，昂扬来！"
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\n瞅过这个页面就算你让奶茶鼠24小时盯梢，自己偷着乐吧。"
+        },
+        en: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Exploring the Future\nAcross the Cosmos of Innovation 🪐",
+          headerDescription: "Focused on Boba Rat Care, Interstellar Refugee Services, and Film Hypnosis Research.\nBuilding bridges between species and galaxies.",
+          contact: "Contact Me",
+          contactAlert: "Don't contact me",
+          sections: [
+            {
+              title: "Boba Rat Care",
+              content: "Based on research in extraterrestrial rodent behavior, we implement a comprehensive care plan for Boba Rat throughout their lifecycle, optimizing their physiological functions and meeting emotional needs, providing robust support for cross-species ecological construction."
+            },
+            {
+              title: "Interstellar Immigration Transition Services",
+              content: "Providing extraterrestrial intelligent beings with training in carbon-based societal awareness and multilingual skill reformation, facilitating their successful adaptation to Earth-based living and fostering a vision of interstellar cultural integration."
+            },
+            {
+              title: "Film Hypnosis Consulting",
+              content: "Dedicated to assisting filmmakers in exploring the deep value of cinematic creation and psychological regulation, crafting a new film paradigm that combines artistic expression with psychological healing, ensuring that audiences enter a deep sleep before the end of the opening credits, delivering an unprecedented level of relaxation."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        fr: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Explorer le futur\nÀ travers l'innovation cosmique 🪐",
+          headerDescription: "Axé sur les Soins de Boba Rat, les Services aux Réfugiés Interstellaires et la Recherche en Hypnose Cinématographique.\nCréation de ponts entre les espèces et les galaxies.",
+          contact: "Contactez-moi",
+          contactAlert: "Ne me contactez pas",
+          sections: [
+            {
+              title: "Soins de Boba Rat",
+              content: "Basé sur l'étude du comportement des rongeurs extraterrestres, nous mettons en œuvre un plan de soins complet pour Boba Rat tout au long de leur vie, optimisant leurs fonctions physiologiques et répondant à leurs besoins émotionnels, et fournissant un soutien solide pour la construction d'écosystèmes inter-espèces."
+            },
+            {
+              title: "Services de Transition pour l'Immigration Interstellaire",
+              content: "Nous offrons aux êtres intelligents extraterrestres une formation sur la conscience sociétale basée sur le carbone ainsi qu'une refonte de leurs compétences multilingues, facilitant leur adaptation à la vie terrestre et favorisant une vision d'intégration interstellaire."
+            },
+            {
+              title: "Consultation en Hypnose Cinématographique",
+              content: "Dédié à aider les cinéastes à explorer la valeur profonde de la création cinématographique et de la régulation psychologique, en élaborant un nouveau paradigme cinématographique alliant expression artistique et guérison psychologique, garantissant que le public entre dans un sommeil profond avant la fin des crédits d'ouverture, pour une détente inégalée."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nEn reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        de: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Die Zukunft erkunden\nÜber den Kosmos der Innovation 🪐",
+          headerDescription: "Fokussiert auf Boba Rat-Pflege, interstellare Flüchtlingsdienste und Film-Hypnoseforschung.\nBrücken zwischen Spezies und Galaxien bauen.",
+          contact: "Kontaktieren Sie mich",
+          contactAlert: "Bitte nicht kontaktieren",
+          sections: [
+            {
+              title: "Boba Rat Pflege",
+              content: "Basierend auf der Forschung zum Verhalten außerirdischer Nagetiere implementieren wir einen umfassenden Lebenszykluspflegeplan für Boba Rat, der ihre physiologischen Funktionen optimiert und emotionale Bedürfnisse erfüllt, und bieten eine solide Unterstützung für den ökologischen Aufbau zwischen Arten."
+            },
+            {
+              title: "Interstellare Migrationsübergangsservices",
+              content: "Wir bieten außerirdischen intelligenten Lebensformen Schulungen zur gesellschaftlichen Kohlenstoffbewusstheit und multilingualen Kompetenzumstrukturierung, um ihre erfolgreiche Anpassung an das irdische Leben zu erleichtern und eine Vision interstellarer kultureller Integration zu fördern."
+            },
+            {
+              title: "Film-Hypnose Beratung",
+              content: "Engagiert, Filmemachern zu helfen, den tiefen Wert der filmischen Kreation und psychologischen Regulierung zu erforschen, entwerfen wir ein neues Filmparadigma, das künstlerischen Ausdruck mit psychologischer Heilung verbindet und sicherstellt, dass das Publikum vor Ende der Vorspannmusik in einen tiefen Schlaf fällt, was zu einem beispiellosen Entspannungserlebnis führt."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        es: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Explorando el Futuro\nInnovación a través del Cosmos 🪐",
+          headerDescription: "Enfocado en el Cuidado de Boba Rat, Servicios para Refugiados Interestelares y la Investigación en Hipnosis Cinematográfica.\nConstruyendo puentes entre especies y galaxias.",
+          contact: "Contáctame",
+          contactAlert: "No me contactes",
+          sections: [
+            {
+              title: "Cuidado de Boba Rat",
+              content: "Basado en la investigación del comportamiento de roedores extraterrestres, implementamos un plan integral de cuidado para Boba Rat a lo largo de su ciclo de vida, optimizando sus funciones fisiológicas y satisfaciendo sus necesidades emocionales, proporcionando un sólido apoyo para la construcción de ecosistemas inter-especies."
+            },
+            {
+              title: "Servicios de Transición para la Inmigración Interestelar",
+              content: "Ofrecemos a seres inteligentes extraterrestres capacitación en conciencia social basada en el carbono y una reestructuración de habilidades multilingües, facilitando su adaptación exitosa a la vida en la Tierra y fomentando una visión de integración cultural interestelar."
+            },
+            {
+              title: "Consultoría en Hipnosis Cinematográfica",
+              content: "Dedicados a ayudar a cineastas a explorar el profundo valor de la creación cinematográfica y la regulación psicológica, elaboramos un nuevo paradigma cinematográfico que combina la expresión artística con la sanación psicológica, asegurando que el público entre en un sueño profundo antes de que terminen los créditos iniciales, ofreciendo un nivel de relajación sin precedentes."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        ja: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Exploring the Future\nAcross the Cosmos of Innovation 🪐",
+          headerDescription: "Focused on Boba Rat Care, Interstellar Refugee Services, and Film Hypnosis Research.\nBuilding bridges between species and galaxies.",
+          contact: "お問い合わせ",
+          contactAlert: "連絡しないでください",
+          sections: [
+            {
+              title: "Boba Rat ケア",
+              content: "地球外げっ歯類の行動学研究に基づき、Boba Rat の全ライフサイクルケアプランを実施。生理機能の最適化と情緒的ニーズの充足を図り、種間生態系構築の堅実な支援を提供します。"
+            },
+            {
+              title: "星間移民移行サービス",
+              content: "地球外知的生命体に、炭素ベースの社会認識研修および多言語スキル再構築サービスを提供し、地球適応生活の円滑な実現と星間文明の融合ビジョンを促進します。"
+            },
+            {
+              title: "映画催眠技術コンサルティング",
+              content: "映画製作者が映像創作と心理調整の深い価値を探求するのを支援し、芸術表現と心理療法を融合した新しい映画パラダイムを構築。オープニングクレジット終了前に観客が深い眠りに入ることを保証し、前例のないリラクゼーションを提供します。"
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        ko: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "미래를 탐험하다\n우주를 넘나드는 혁신 🪐",
+          headerDescription: "Focused on Boba Rat Care, Interstellar Refugee Services, and Film Hypnosis Research.\nBuilding bridges between species and galaxies.",
+          contact: "연락하기",
+          contactAlert: "연락하지 마세요",
+          sections: [
+            {
+              title: "Boba Rat 케어",
+              content: "외계 설치류 행동 연구를 바탕으로 Boba Rat 의 전 생애 주기 케어 플랜을 시행하여 생리 기능 최적화와 정서적 요구 충족을 도모하며, 종 간 생태계 구축을 위한 견고한 지원을 제공합니다."
+            },
+            {
+              title: "성간 이민 전환 서비스",
+              content: "외계 지적 생명체에게 탄소 기반 사회 인식 교육과 다국어 기술 재구성을 제공하여 지구 생활에 원활히 적응하고, 성간 문명의 융합 비전을 촉진합니다."
+            },
+            {
+              title: "영화 최면 기술 컨설팅",
+              content: "영화 제작자가 영화 창작과 심리 조절의 깊은 가치를 탐구하도록 지원하며, 예술적 표현과 심리 치료 기능을 겸비한 새로운 영화 패러다임을 구축하여 오프닝 크레딧 종료 전 관객이 깊은 수면에 빠지도록 보장, 전례 없는 휴식을 선사합니다."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        ru: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Исследуйте будущее\nИнновации сквозь космос 🪐",
+          headerDescription: "Специализируется на уходе за Boba Rat, услугах для межзвёздных беженцев и исследовании кино-гипноза.\nСтроит мосты между видами и галактиками.",
+          contact: "Связаться со мной",
+          contactAlert: "Не связывайтесь со мной",
+          sections: [
+            {
+              title: "Уход за Boba Rat",
+              content: "На основе исследований поведения внеземных грызунов мы реализуем комплексный план ухода за Boba Rat на протяжении всей жизни, оптимизируя их физиологические функции и удовлетворяя эмоциональные потребности, предоставляя надёжную поддержку для создания межвидовых экосистем."
+            },
+            {
+              title: "Услуги по переходу межзвёздной иммиграции",
+              content: "Мы предоставляем внеземным разумным существам обучение по социальной осознанности на основе углерода и мультилингвальное переосмысление навыков, способствуя их успешной адаптации к земной жизни и интеграции межзвёздной культуры."
+            },
+            {
+              title: "Консультации по кино-гипнозу",
+              content: "Мы помогаем кинематографистам исследовать глубокую ценность киноискусства и психической регуляции, создавая новую парадигму кино, объединяющую художественное выражение с психотерапевтическим исцелением, гарантируя, что зрители впадают в глубокий сон до окончания титров, обеспечивая беспрецедентное расслабление."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        th: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Exploring the Future\nAcross the Cosmos of Innovation 🪐",
+          headerDescription: "Focused on Boba Rat Care, Interstellar Refugee Services, and Film Hypnosis Research.\nBuilding bridges between species and galaxies.",
+          contact: "ติดต่อฉัน",
+          contactAlert: "อย่าติดต่อฉัน",
+          sections: [
+            {
+              title: "Boba Rat Care",
+              content: "โดยอิงจากการศึกษาพฤติกรรมของสัตว์ฟันแทะนอกโลก เราดำเนินแผนการดูแล Boba Rat ตลอดวงจรชีวิต เพื่อเพิ่มประสิทธิภาพการทำงานของร่างกายและตอบสนองความต้องการทางอารมณ์ พร้อมให้การสนับสนุนที่มั่นคงในการสร้างระบบนิเวศระหว่างสายพันธุ์."
+            },
+            {
+              title: "Interstellar Immigration Transition Services",
+              content: "Providing extraterrestrial intelligent beings with training in carbon-based societal awareness and multilingual skill reformation, facilitating their successful adaptation to Earth-based living and fostering a vision of interstellar cultural integration."
+            },
+            {
+              title: "Film Hypnosis Consulting",
+              content: "Dedicated to assisting filmmakers in exploring the deep value of cinematic creation and psychological regulation, crafting a new film paradigm that combines artistic expression with psychological healing, ensuring that audiences enter a deep sleep before the end of the opening credits, delivering an unprecedented level of relaxation."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        es: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Explorando el Futuro\nInnovación a través del Cosmos 🪐",
+          headerDescription: "Enfocado en el Cuidado de Boba Rat, Servicios para Refugiados Interestelares y la Investigación en Hipnosis Cinematográfica.\nConstruyendo puentes entre especies y galaxias.",
+          contact: "Contáctame",
+          contactAlert: "No me contactes",
+          sections: [
+            {
+              title: "Cuidado de Boba Rat",
+              content: "Basado en la investigación del comportamiento de roedores extraterrestres, implementamos un plan integral de cuidado para Boba Rat a lo largo de su ciclo de vida, optimizando sus funciones fisiológicas y satisfaciendo sus necesidades emocionales, proporcionando un sólido apoyo para la construcción de ecosistemas inter-especies."
+            },
+            {
+              title: "Servicios de Transición para la Inmigración Interestelar",
+              content: "Ofrecemos a seres inteligentes extraterrestres capacitación en conciencia social basada en el carbono y una reestructuración de habilidades multilingües, facilitando su adaptación exitosa a la vida en la Tierra y fomentando una visión de integración cultural interestelar."
+            },
+            {
+              title: "Consultoría en Hipnosis Cinematográfica",
+              content: "Dedicados a ayudar a cineastas a explorar el profundo valor de la creación cinematográfica y la regulación psicológica, elaboramos un nuevo paradigma cinematográfico que combina la expresión artística con la sanación psicológica, asegurando que el público entre en un sueño profundo antes de que terminen los créditos iniciales, ofreciendo un nivel de relajación sin precedentes."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        ar: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "استكشاف المستقبل\nعبر كون الابتكار 🪐",
+          headerDescription: "يركز على رعاية Boba Rat، وخدمات اللاجئين بين النجوم، وبحوث التنويم المغناطيسي السينمائي.\nبناء جسور بين الأنواع والمجرات.",
+          contact: "اتصل بي",
+          contactAlert: "لا تتصل بي",
+          sections: [
+            {
+              title: "رعاية Boba Rat",
+              content: "استنادًا إلى أبحاث سلوك القوارض الكونية، ننفذ خطة رعاية شاملة لـ Boba Rat طوال دورة حياتهم، مما يحسن وظائفهم الفسيولوجية ويلبي احتياجاتهم العاطفية، ويوفر دعمًا قويًا لبناء نظم بيئية بين الأنواع."
+            },
+            {
+              title: "خدمات انتقال الهجرة بين النجوم",
+              content: "نقدم للكائنات الذكية خارج الأرض تدريبًا على الوعي الاجتماعي المستند إلى الكربون وإعادة هيكلة المهارات متعددة اللغات، مما يسهل تكيفهم مع الحياة على الأرض وتعزيز رؤية للاندماج الثقافي بين النجوم."
+            },
+            {
+              title: "استشارات التنويم المغناطيسي السينمائي",
+              content: "مكرسة لمساعدة صانعي الأفلام في استكشاف القيمة العميقة للإبداع السينمائي والتنظيم النفسي، من خلال صياغة نموذج سينمائي جديد يجمع بين التعبير الفني والعلاج النفسي، مع ضمان دخول الجمهور في نوم عميق قبل نهاية الاعتمادات الافتتاحية، مما يوفر تجربة استرخاء غير مسبوقة."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        },
+        cy: {
+          navTitle: "Yuxiang Cai",
+          headerTitle: "Archwilio'r Dyfodol\nArloesedd y Cosmos 🪐",
+          headerDescription: "Yn canolbwyntio ar Ofal Boba Rat, Gwasanaethau Ffoaduriaid Sêr ac Ymchwil Hypnos Ffilm.\nAdeiladu pontydd rhwng rhywiau a galaxiâu.",
+          contact: "Cysylltwch â mi",
+          contactAlert: "Peidiwch â chysylltu",
+          sections: [
+            {
+              title: "Boba Rat Care",
+              content: "Yn seiliedig ar astudiaeth ymddygiad llygodenol alldrawydd, rydym yn gweithredu cynllun gofal llawn cylch bywyd ar gyfer Boba Rat, gan optimeiddio eu swyddogaethau ffisiol a bodloni eu hanghenion emosiynol, gan ddarparu cefnogaeth gadarn i adeiladu ecosystemau rhyngryw."
+            },
+            {
+              title: "Gwasanaethau Trawsnewid Mudiad Rhyngserol",
+              content: "Rydym yn darparu hyfforddiant ar ymwybyddiaeth gymdeithasol sebonol a ailstrwythuro sgiliau amlieithog i fodau bywyd alldrawydd, gan hwyluso eu haddasu i fywyd ar y Ddaear a hyrwyddo gweledigaeth o fewnfusiad diwylliannol rhyngserol."
+            },
+            {
+              title: "Ymgynghoriad Hypnos Ffilm",
+              content: "Yn ymroddedig i helpu cynhyrchwyr ffilm i archwilio gwerth dwfn creu ffilm a rheoli seicolegol, gan sicrhau i'r gynulleidfa fynd i gysgu dwfn cyn diwedd y credydau agoriadol, gan ddarparu profiad ymlaciad anhygoel."
+            }
+          ],
+          footer: "©2025 Yuxiang Cai. All rights reserved.\nBy reading this page, you agree to the surveillance of Boba Rat. Good luck!"
+        }
+      };
+      
+      // 辅助函数：将包含换行符的字符串拆分并渲染为多行
+      const renderMultiline = (text, className = "") => (
+        text.split("\n").map((line, index, arr) => (
+          <React.Fragment key={index}>
+            <span className={className}>{line}</span>
+            {index !== arr.length - 1 && <br />}
+          </React.Fragment>
+        ))
+      );
+      
       return (
         <div className="relative bg-white overflow-hidden">
-          {/* 背景光晕：全屏覆盖 */}
+          {/* 背景光晕 */}
           <div className="absolute inset-0 pointer-events-none">
-            <div
-              className="absolute inset-0"
-              style={{
-                /* 渐变中心调整到右侧（80% 50%），颜色更浓郁 */
-                background: 'radial-gradient(circle at 80% 40%, rgba(255,192,203,0.9) 0%, rgba(255,182,193,0.7) 20%, rgba(255,192,203,0.5) 40%, transparent 60%)'
-              }}
-            ></div>
+            <div className="absolute inset-0" style={{
+              background: 'radial-gradient(circle at 80% 40%, rgba(255,192,203,0.9) 0%, rgba(255,182,193,0.7) 20%, rgba(255,192,203,0.5) 40%, transparent 60%)'
+            }}></div>
           </div>
-          
-          {/* 磨砂玻璃效果：全屏覆盖 */}
+          {/* 磨砂玻璃效果 */}
           <div className="absolute inset-0 pointer-events-none backdrop-blur-xl bg-white/60"></div>
-          
           {/* 内容层 */}
           <div className="relative z-10">
-            {/* 全屏区：导航和主要内容 */}
             <div className="min-h-screen pt-24 lg:pt-32">
-              {/* 顶部导航 */}
-              <nav className="max-w-3xl mx-auto px-6 py-6">
-                <div className="flex items-center">
-                  <span className="text-xl font-bold text-slate-900">Yuxiang Cai</span>
+              <nav className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center">
+                <span className="text-xl font-bold text-slate-900">
+                  {translations[language].navTitle}
+                </span>
+                {/* 自定义语言下拉菜单：无边框、透明背景，在左侧显示扁平化地球图标 */}
+                <div className="relative inline-block">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 0 20" />
+                    </svg>
+                  </span>
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="pl-8 pr-4 py-1 text-sm text-slate-900 bg-transparent appearance-none focus:outline-none"
+                  >
+                    {languageOrder.map(code => (
+                      <option key={code} value={code}>{languageNames[code]}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <svg className="fill-current h-3 w-3 text-slate-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M5.516 7.548L10 12.032l4.484-4.484L16 8.064 10 14.064 4 8.064z" />
+                    </svg>
+                  </div>
                 </div>
               </nav>
-              
-              {/* 主要内容区域 */}
               <main className="max-w-3xl mx-auto px-6 py-24 animate-fadeInUp">
                 <div className="text-left">
                   <h1 className="text-5xl font-bold mb-8 text-slate-900">
-                    探索未来<br />跨越星际的创新🪐
+                    {renderMultiline(translations[language].headerTitle)}
                   </h1>
                   <p className="text-xl text-slate-700 mb-12">
-                    专注于奶茶鼠护理、星际难民服务和电影催眠研究。<br />
-                    搭建物种与星系间的桥梁。
+                    {renderMultiline(translations[language].headerDescription)}
                   </p>
                   <button 
                     className="px-6 py-3 rounded-full border border-slate-900/20 text-slate-900 hover:bg-white/20 transition-colors"
-                    onClick={() => alert("不许联系我")}
+                    onClick={() => alert(translations[language].contactAlert)}
                   >
-                    联系我
+                    {translations[language].contact}
                   </button>
                 </div>
               </main>
             </div>
-            
-            {/* 后续内容：滚动时出现动画效果 */}
             <FadeInSection>
               <main className="max-w-3xl mx-auto px-6 py-24">
                 <div className="space-y-12 text-left">
-                  <div>
-                    <h3 className="text-xl font-bold mb-4 text-slate-900">奶茶鼠护理</h3>
-                    <p className="text-slate-700">
-                      基于外星啮齿类动物行为学研究，实施奶茶鼠全生命周期照护方案，
-                      促进其生理机能优化与情感需求满足，为跨物种生态构建提供坚实支撑。
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-xl font-bold mb-4 text-slate-900">星际移民身份过渡服务</h3>
-                    <p className="text-slate-700">
-                      为地外智慧生命体提供碳基社会认知培训及多语种技能重塑服务，
-                      助力星际移民顺利实现地球化生存，实现星际文明共融愿景。
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-xl font-bold mb-4 text-slate-900">电影催眠技术咨询</h3>
-                    <p className="text-slate-700">
-                      致力于助力电影制作人探索影视创作与心理调控的深层价值，
-                      打造兼具艺术表达与心理疗愈功能的全新电影范式，
-                      确保观众在片头曲结束前进入深度睡眠，带来前所未有的放松体验。
-                    </p>
-                  </div>
+                  {translations[language].sections.map((section, index) => (
+                    <div key={index}>
+                      <h3 className="text-xl font-bold mb-4 text-slate-900">{section.title}</h3>
+                      <p className="text-slate-700">{section.content}</p>
+                    </div>
+                  ))}
                 </div>
               </main>
             </FadeInSection>
-            
-            {/* 页脚 */}
             <footer className="text-center p-6 text-sm text-slate-700">
-              ©2025 Yuxiang Cai. All rights reserved.
-              <br />
-              阅读本页面即默认接受奶茶鼠的监视，祝你好运。
+              {renderMultiline(translations[language].footer)}
             </footer>
           </div>
         </div>
